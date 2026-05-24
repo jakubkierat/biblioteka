@@ -31,6 +31,15 @@ const loansStore = useLoansStore()
         </UButton>
 
         <UButton
+          icon="i-heroicons-arrow-path"
+          color="neutral"
+          variant="outline"
+          to="/loans"
+        >
+          Wypożyczenia
+        </UButton>
+
+        <UButton
           icon="i-heroicons-plus"
           color="neutral"
           variant="outline"

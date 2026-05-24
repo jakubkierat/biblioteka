@@ -11,6 +11,16 @@ export interface BookFilters {
   sort: BookSortOption
 }
 
+export interface CreateBookPayload {
+  title: string
+  isbn: string
+  authorId: string
+  categoryId: string
+  publishedYear: number
+  description: string
+  status: BookStatus
+}
+
 export const useBooksStore = defineStore('books', () => {
   const books = ref<Book[]>([...mockBooks])
 
@@ -73,6 +83,27 @@ export const useBooksStore = defineStore('books', () => {
     return books.value.find((book) => book.id === id)
   }
 
+  const addBook = (payload: CreateBookPayload) => {
+    const now = new Date().toISOString()
+
+    const book: Book = {
+      id: crypto.randomUUID(),
+      title: payload.title,
+      isbn: payload.isbn,
+      authorId: payload.authorId,
+      categoryId: payload.categoryId,
+      publishedYear: payload.publishedYear,
+      description: payload.description,
+      status: payload.status,
+      createdAt: now,
+      updatedAt: now
+    }
+
+    books.value.unshift(book)
+
+    return book
+  }
+
   const deleteBook = (id: string) => {
     books.value = books.value.filter((book) => book.id !== id)
   }
@@ -96,6 +127,7 @@ export const useBooksStore = defineStore('books', () => {
     borrowedBooks,
     filteredBooks,
     getBookById,
+    addBook,
     deleteBook,
     setBookStatus
   }
