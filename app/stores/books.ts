@@ -21,6 +21,16 @@ export interface CreateBookPayload {
   status: BookStatus
 }
 
+export interface UpdateBookPayload {
+  title: string
+  isbn: string
+  authorId: string
+  categoryId: string
+  publishedYear: number
+  description: string
+  status: BookStatus
+}
+
 export const useBooksStore = defineStore('books', () => {
   const books = ref<Book[]>([...mockBooks])
 
@@ -104,6 +114,25 @@ export const useBooksStore = defineStore('books', () => {
     return book
   }
 
+  const updateBook = (id: string, payload: UpdateBookPayload) => {
+    const book = getBookById(id)
+
+    if (!book) {
+      return
+    }
+
+    book.title = payload.title
+    book.isbn = payload.isbn
+    book.authorId = payload.authorId
+    book.categoryId = payload.categoryId
+    book.publishedYear = payload.publishedYear
+    book.description = payload.description
+    book.status = payload.status
+    book.updatedAt = new Date().toISOString()
+
+    return book
+  }
+
   const deleteBook = (id: string) => {
     books.value = books.value.filter((book) => book.id !== id)
   }
@@ -128,6 +157,7 @@ export const useBooksStore = defineStore('books', () => {
     filteredBooks,
     getBookById,
     addBook,
+    updateBook,
     deleteBook,
     setBookStatus
   }

@@ -102,14 +102,16 @@ const deleteBook = () => {
         v-if="book"
         class="flex flex-wrap gap-2"
       >
-        <UButton
-          icon="i-heroicons-pencil-square"
-          color="neutral"
-          variant="outline"
-          :to="`/books/${book.id}/edit`"
-        >
-          Edytuj
-        </UButton>
+        <NuxtLink :to="`/books/edit/${book.id}`">
+          <UButton
+            icon="i-heroicons-pencil-square"
+            color="neutral"
+            variant="outline"
+            type="button"
+      >
+            Edytuj
+          </UButton>
+        </NuxtLink>
 
         <UButton
           icon="i-heroicons-trash"
