@@ -1,6 +1,18 @@
 import { defineStore } from 'pinia'
-import { mockAuthors } from '~/data/mockLibrary'
-import type { Author } from '~/types/author'
+import { mockAuthors } from '../data/mockLibrary'
+import type { Author } from '../types/author'
+
+export interface CreateAuthorPayload {
+  firstName: string
+  lastName: string
+  biography?: string
+}
+
+export interface UpdateAuthorPayload {
+  firstName: string
+  lastName: string
+  biography?: string
+}
 
 export const useAuthorsStore = defineStore('authors', () => {
   const authors = ref<Author[]>([...mockAuthors])
@@ -19,9 +31,43 @@ export const useAuthorsStore = defineStore('authors', () => {
     return `${author.firstName} ${author.lastName}`
   }
 
+  const addAuthor = (payload: CreateAuthorPayload) => {
+    const author: Author = {
+      id: crypto.randomUUID(),
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      biography: payload.biography
+    }
+
+    authors.value.push(author)
+
+    return author
+  }
+
+  const updateAuthor = (id: string, payload: UpdateAuthorPayload) => {
+    const author = getAuthorById(id)
+
+    if (!author) {
+      return
+    }
+
+    author.firstName = payload.firstName
+    author.lastName = payload.lastName
+    author.biography = payload.biography
+
+    return author
+  }
+
+  const deleteAuthor = (id: string) => {
+    authors.value = authors.value.filter((author) => author.id !== id)
+  }
+
   return {
     authors,
     getAuthorById,
-    getAuthorFullName
+    getAuthorFullName,
+    addAuthor,
+    updateAuthor,
+    deleteAuthor
   }
 })

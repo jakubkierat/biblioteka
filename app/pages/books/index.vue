@@ -16,6 +16,16 @@ const deleteSelectedBook = (id: string) => {
   <div class="space-y-6">
     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
+        <UButton
+          icon="i-heroicons-arrow-left"
+          color="neutral"
+          variant="ghost"
+          to="/"
+          class="mb-4"
+        >
+          Wróć do panelu głównego
+        </UButton>
+
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
           Książki
         </h2>

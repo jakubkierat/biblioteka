@@ -31,11 +31,20 @@ const loansStore = useLoansStore()
         </UButton>
 
         <UButton
+          icon="i-heroicons-user-group"
+          color="neutral"
+          variant="outline"
+          to="/authors"
+        >
+          Autorzy
+        </UButton>
+
+        <UButton
           icon="i-heroicons-arrow-path"
           color="neutral"
           variant="outline"
-          to="/loans"
-        >
+         to="/loans"
+       >
           Wypożyczenia
         </UButton>
 
@@ -47,7 +56,7 @@ const loansStore = useLoansStore()
         >
           Dodaj książkę
         </UButton>
-      </div>
+</div>
     </div>
 
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

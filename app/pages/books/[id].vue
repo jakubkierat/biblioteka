@@ -70,6 +70,12 @@ const deleteBook = () => {
     return
   }
 
+  const confirmed = window.confirm('Czy na pewno usunąć tę książkę?')
+
+  if (!confirmed) {
+    return
+  }
+
   booksStore.deleteBook(book.value.id)
   router.push('/books')
 }
