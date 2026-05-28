@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { useAuthorsStore } from '~/stores/authors'
-import { useBooksStore } from '~/stores/books'
-import { useLoansStore } from '~/stores/loans'
+import { useAuthorsStore } from '../stores/authors'
+import { useBooksStore } from '../stores/books'
+import { useCategoriesStore } from '../stores/categories'
+import { useLoansStore } from '../stores/loans'
 
 const booksStore = useBooksStore()
 const authorsStore = useAuthorsStore()
+const categoriesStore = useCategoriesStore()
 const loansStore = useLoansStore()
 </script>
 
@@ -40,11 +42,20 @@ const loansStore = useLoansStore()
         </UButton>
 
         <UButton
+          icon="i-heroicons-tag"
+          color="neutral"
+          variant="outline"
+          to="/categories"
+        >
+          Kategorie
+        </UButton>
+
+        <UButton
           icon="i-heroicons-arrow-path"
           color="neutral"
           variant="outline"
-         to="/loans"
-       >
+          to="/loans"
+        >
           Wypożyczenia
         </UButton>
 
@@ -56,7 +67,7 @@ const loansStore = useLoansStore()
         >
           Dodaj książkę
         </UButton>
-</div>
+      </div>
     </div>
 
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -72,7 +83,10 @@ const loansStore = useLoansStore()
             </p>
           </div>
 
-          <UIcon name="i-heroicons-book-open" class="h-8 w-8 text-primary-500" />
+          <UIcon
+            name="i-heroicons-book-open"
+            class="h-8 w-8 text-primary-500"
+          />
         </div>
       </UCard>
 
@@ -88,7 +102,10 @@ const loansStore = useLoansStore()
             </p>
           </div>
 
-          <UIcon name="i-heroicons-check-circle" class="h-8 w-8 text-primary-500" />
+          <UIcon
+            name="i-heroicons-check-circle"
+            class="h-8 w-8 text-primary-500"
+          />
         </div>
       </UCard>
 
@@ -104,7 +121,10 @@ const loansStore = useLoansStore()
             </p>
           </div>
 
-          <UIcon name="i-heroicons-clock" class="h-8 w-8 text-primary-500" />
+          <UIcon
+            name="i-heroicons-clock"
+            class="h-8 w-8 text-primary-500"
+          />
         </div>
       </UCard>
 
@@ -120,7 +140,10 @@ const loansStore = useLoansStore()
             </p>
           </div>
 
-          <UIcon name="i-heroicons-arrow-path" class="h-8 w-8 text-primary-500" />
+          <UIcon
+            name="i-heroicons-arrow-path"
+            class="h-8 w-8 text-primary-500"
+          />
         </div>
       </UCard>
     </div>
@@ -167,9 +190,31 @@ const loansStore = useLoansStore()
 
       <UCard>
         <template #header>
-          <h3 class="text-lg font-semibold">
-            Statystyki katalogu
-          </h3>
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold">
+              Statystyki katalogu
+            </h3>
+
+            <div class="flex gap-2">
+              <UButton
+                size="sm"
+                color="neutral"
+                variant="soft"
+                to="/authors"
+              >
+                Autorzy
+              </UButton>
+
+              <UButton
+                size="sm"
+                color="neutral"
+                variant="soft"
+                to="/categories"
+              >
+                Kategorie
+              </UButton>
+            </div>
+          </div>
         </template>
 
         <div class="space-y-4">
@@ -180,6 +225,16 @@ const loansStore = useLoansStore()
 
             <span class="font-semibold">
               {{ authorsStore.authors.length }}
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 dark:text-gray-400">
+              Kategorie
+            </span>
+
+            <span class="font-semibold">
+              {{ categoriesStore.categories.length }}
             </span>
           </div>
 
