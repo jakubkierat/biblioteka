@@ -19,6 +19,12 @@ export const useCategoriesStore = defineStore('categories', () => {
     return categories.value.find((category) => category.id === id)
   }
 
+  const loadCategories = async () => {
+  const data = await $fetch<Category[]>('/api/categories')
+
+  categories.value = data
+}
+
   const getCategoryName = (id: string) => {
     const category = getCategoryById(id)
 
@@ -60,6 +66,7 @@ export const useCategoriesStore = defineStore('categories', () => {
 
   return {
     categories,
+    loadCategories,
     getCategoryById,
     getCategoryName,
     addCategory,

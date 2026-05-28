@@ -17,6 +17,12 @@ export interface UpdateAuthorPayload {
 export const useAuthorsStore = defineStore('authors', () => {
   const authors = ref<Author[]>([...mockAuthors])
 
+const loadAuthors = async () => {
+  const data = await $fetch<Author[]>('/api/authors')
+
+  authors.value = data
+}
+
   const getAuthorById = (id: string) => {
     return authors.value.find((author) => author.id === id)
   }
@@ -64,6 +70,7 @@ export const useAuthorsStore = defineStore('authors', () => {
 
   return {
     authors,
+    loadAuthors,
     getAuthorById,
     getAuthorFullName,
     addAuthor,

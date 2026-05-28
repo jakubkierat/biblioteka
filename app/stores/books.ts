@@ -89,6 +89,12 @@ export const useBooksStore = defineStore('books', () => {
     return result
   })
 
+  const loadBooks = async () => {
+  const data = await $fetch<Book[]>('/api/books')
+
+  books.value = data
+}
+
   const getBookById = (id: string) => {
     return books.value.find((book) => book.id === id)
   }
@@ -155,6 +161,7 @@ export const useBooksStore = defineStore('books', () => {
     availableBooks,
     borrowedBooks,
     filteredBooks,
+    loadBooks,
     getBookById,
     addBook,
     updateBook,

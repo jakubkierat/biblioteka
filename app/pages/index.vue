@@ -8,6 +8,13 @@ const booksStore = useBooksStore()
 const authorsStore = useAuthorsStore()
 const categoriesStore = useCategoriesStore()
 const loansStore = useLoansStore()
+
+await Promise.all([
+  booksStore.loadBooks(),
+  authorsStore.loadAuthors(),
+  categoriesStore.loadCategories(),
+  loansStore.loadLoans()
+])
 </script>
 
 <template>
