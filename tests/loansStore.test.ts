@@ -1,6 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { useLoansStore } from '../app/stores/loans'
+import type { Loan } from '../app/types/loan'
 
 describe('useLoansStore', () => {
   beforeEach(() => {
@@ -34,7 +35,7 @@ describe('useLoansStore', () => {
     loansStore.addLoan('book-1', 'Jan Kowalski')
     loansStore.returnLoan('book-1')
 
-    const loan = loansStore.loans.find((item) => item.bookId === 'book-1')
+    const loan = loansStore.loans.find((item: Loan) => item.bookId === 'book-1')
 
     expect(loan?.status).toBe('returned')
     expect(loan?.returnedAt).toBeDefined()
