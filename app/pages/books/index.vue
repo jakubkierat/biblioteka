@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import { useAuthorsStore } from '~/stores/authors'
-import { useBooksStore } from '~/stores/books'
-import { useCategoriesStore } from '~/stores/categories'
+import BookStatusBadge from '../../components/books/BookStatusBadge.vue'
+import { useAuthStore } from '../../stores/auth'
+import { useAuthorsStore } from '../../stores/authors'
+import { useBooksStore } from '../../stores/books'
+import { useCategoriesStore } from '../../stores/categories'
 
+const authStore = useAuthStore()
 const booksStore = useBooksStore()
 const authorsStore = useAuthorsStore()
 const categoriesStore = useCategoriesStore()
 
 const deleteSelectedBook = (id: string) => {
+  const confirmed = window.confirm('Czy na pewno usunąć tę książkę?')
+
+  if (!confirmed) {
+    return
+  }
+
   booksStore.deleteBook(id)
 }
 </script>
@@ -36,6 +45,7 @@ const deleteSelectedBook = (id: string) => {
       </div>
 
       <UButton
+        v-if="authStore.isAdmin"
         icon="i-heroicons-plus"
         color="primary"
         to="/books/create"
@@ -59,9 +69,11 @@ const deleteSelectedBook = (id: string) => {
           <option value="all">
             Wszystkie statusy
           </option>
+
           <option value="available">
             Dostępne
           </option>
+
           <option value="borrowed">
             Wypożyczone
           </option>
@@ -74,6 +86,7 @@ const deleteSelectedBook = (id: string) => {
           <option value="all">
             Wszystkie kategorie
           </option>
+
           <option
             v-for="category in categoriesStore.categories"
             :key="category.id"
@@ -90,12 +103,15 @@ const deleteSelectedBook = (id: string) => {
           <option value="title-asc">
             Tytuł A-Z
           </option>
+
           <option value="title-desc">
             Tytuł Z-A
           </option>
+
           <option value="year-asc">
             Rok rosnąco
           </option>
+
           <option value="year-desc">
             Rok malejąco
           </option>
@@ -111,18 +127,23 @@ const deleteSelectedBook = (id: string) => {
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Tytuł
               </th>
+
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Autor
               </th>
+
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Kategoria
               </th>
+
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Rok
               </th>
+
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Status
               </th>
+
               <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Akcje
               </th>
@@ -172,6 +193,7 @@ const deleteSelectedBook = (id: string) => {
                   />
 
                   <UButton
+                    v-if="authStore.isAdmin"
                     icon="i-heroicons-trash"
                     color="error"
                     variant="ghost"

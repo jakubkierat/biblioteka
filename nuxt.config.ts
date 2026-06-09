@@ -3,7 +3,8 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxt/ui',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt'
   ],
 
   css: [
@@ -18,3 +19,4 @@ export default defineNuxtConfig({
     strict: true
   }
 })
+
