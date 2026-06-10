@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import BookForm from '~/components/books/BookForm.vue'
-import type { BookSchema } from '~/schemas/bookSchema'
-import { useAuthorsStore } from '~/stores/authors'
-import { useBooksStore } from '~/stores/books'
-import { useCategoriesStore } from '~/stores/categories'
+import BookForm from '../../../components/books/BookForm.vue'
+import type { BookSchema } from '../../../schemas/bookSchema'
+import { useAuthorsStore } from '../../../stores/authors'
+import { useBooksStore } from '../../../stores/books'
+import { useCategoriesStore } from '../../../stores/categories'
+
+definePageMeta({
+  middleware: 'role',
+  roles: ['admin']
+})
 
 const route = useRoute()
 const router = useRouter()

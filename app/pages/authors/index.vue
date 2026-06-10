@@ -5,6 +5,11 @@ import { useAuthorsStore } from '../../stores/authors'
 import { useBooksStore } from '../../stores/books'
 import type { Author } from '../../types/author'
 
+definePageMeta({
+  middleware: 'role',
+  roles: ['admin']
+})
+
 const authorsStore = useAuthorsStore()
 const booksStore = useBooksStore()
 
@@ -144,12 +149,15 @@ const deleteAuthor = (author: Author) => {
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Autor
               </th>
+
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Biografia
               </th>
+
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Liczba książek
               </th>
+
               <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Akcje
               </th>

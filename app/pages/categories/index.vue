@@ -5,6 +5,11 @@ import { useBooksStore } from '../../stores/books'
 import { useCategoriesStore } from '../../stores/categories'
 import type { Category } from '../../types/category'
 
+definePageMeta({
+  middleware: 'role',
+  roles: ['admin']
+})
+
 const categoriesStore = useCategoriesStore()
 const booksStore = useBooksStore()
 
@@ -141,12 +146,15 @@ const deleteCategory = (category: Category) => {
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Kategoria
               </th>
+
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Opis
               </th>
+
               <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Liczba książek
               </th>
+
               <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Akcje
               </th>

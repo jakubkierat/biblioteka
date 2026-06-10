@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { useAuthorsStore } from '~/stores/authors'
-import { useBooksStore } from '~/stores/books'
-import { useLoansStore } from '~/stores/loans'
+import { useAuthorsStore } from '../../stores/authors'
+import { useBooksStore } from '../../stores/books'
+import { useLoansStore } from '../../stores/loans'
+
+definePageMeta({
+  middleware: 'role',
+  roles: ['user', 'admin']
+})
 
 const booksStore = useBooksStore()
 const authorsStore = useAuthorsStore()

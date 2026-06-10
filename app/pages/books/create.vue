@@ -5,6 +5,11 @@ import { useAuthorsStore } from '../../stores/authors'
 import { useBooksStore } from '../../stores/books'
 import { useCategoriesStore } from '../../stores/categories'
 
+definePageMeta({
+  middleware: 'role',
+  roles: ['admin']
+})
+
 const router = useRouter()
 
 const booksStore = useBooksStore()

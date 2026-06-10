@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { useAuthorsStore } from '~/stores/authors'
-import { useBooksStore } from '~/stores/books'
-import { useCategoriesStore } from '~/stores/categories'
-import { useLoansStore } from '~/stores/loans'
+import { useAuthStore } from '../../stores/auth'
+import { useAuthorsStore } from '../../stores/authors'
+import { useBooksStore } from '../../stores/books'
+import { useCategoriesStore } from '../../stores/categories'
+import { useLoansStore } from '../../stores/loans'
 
 const route = useRoute()
 const router = useRouter()
 
+const authStore = useAuthStore()
 const booksStore = useBooksStore()
 const authorsStore = useAuthorsStore()
 const categoriesStore = useCategoriesStore()
@@ -105,7 +107,7 @@ const deleteBook = () => {
       </div>
 
       <div
-        v-if="book"
+        v-if="book && authStore.isAdmin"
         class="flex flex-wrap gap-2"
       >
         <NuxtLink :to="`/books/edit/${book.id}`">
@@ -114,7 +116,7 @@ const deleteBook = () => {
             color="neutral"
             variant="outline"
             type="button"
-      >
+          >
             Edytuj
           </UButton>
         </NuxtLink>
@@ -123,6 +125,7 @@ const deleteBook = () => {
           icon="i-heroicons-trash"
           color="error"
           variant="outline"
+          type="button"
           @click="deleteBook"
         >
           Usuń
@@ -267,7 +270,7 @@ const deleteBook = () => {
       </div>
 
       <div class="space-y-6">
-        <UCard>
+        <UCard v-if="authStore.isUser || authStore.isAdmin">
           <template #header>
             <h3 class="text-lg font-semibold">
               Obsługa książki
@@ -327,6 +330,26 @@ const deleteBook = () => {
               Zwróć książkę
             </UButton>
           </div>
+        </UCard>
+
+        <UCard v-else>
+          <template #header>
+            <h3 class="text-lg font-semibold">
+              Obsługa książki
+            </h3>
+          </template>
+
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Zaloguj się jako użytkownik, aby wypożyczać i zwracać książki.
+          </p>
+
+          <UButton
+            class="mt-4"
+            color="primary"
+            to="/login"
+          >
+            Zaloguj
+          </UButton>
         </UCard>
       </div>
     </div>
