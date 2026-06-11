@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useAuthStore } from '../../stores/auth'
+import { useNotificationsStore } from '../../stores/notifications'
 
 const authStore = useAuthStore()
+const notificationsStore = useNotificationsStore()
 
 const roleLabel = computed(() => {
   if (authStore.isAdmin) {
@@ -39,6 +41,15 @@ const roleLabel = computed(() => {
         <UBadge color="primary" variant="subtle">
           {{ roleLabel }}
         </UBadge>
+
+        <UButton
+          icon="i-heroicons-bell"
+          color="neutral"
+          variant="outline"
+          to="/notifications"
+        >
+          {{ notificationsStore.unreadCount }}
+        </UButton>
 
         <UButton
           v-if="authStore.isAdmin"

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { mockCategories } from '../data/mockLibrary'
 import type { Category } from '../types/category'
+import { useNotificationsStore } from './notifications'
 
 export interface CreateCategoryPayload {
   name: string
@@ -12,65 +13,101 @@ export interface UpdateCategoryPayload {
   description?: string
 }
 
-export const useCategoriesStore = defineStore('categories', () => {
-  const categories = ref<Category[]>([...mockCategories])
+export const useCategoriesStore = defineStore(
+  'categories',
+  () => {
+    const categories = ref<Category[]>([...mockCategories])
 
-  const getCategoryById = (id: string) => {
-    return categories.value.find((category) => category.id === id)
-  }
+    const loadCategories = async () => {
+      const data = await $fetch<Category[]>('/api/categories')
 
-  const loadCategories = async () => {
-  const data = await $fetch<Category[]>('/api/categories')
-
-  categories.value = data
-}
-
-  const getCategoryName = (id: string) => {
-    const category = getCategoryById(id)
-
-    if (!category) {
-      return 'Brak kategorii'
+      categories.value = data
     }
 
-    return category.name
-  }
-
-  const addCategory = (payload: CreateCategoryPayload) => {
-    const category: Category = {
-      id: crypto.randomUUID(),
-      name: payload.name,
-      description: payload.description
+    const getCategoryById = (id: string) => {
+      return categories.value.find((category) => category.id === id)
     }
 
-    categories.value.push(category)
+    const getCategoryName = (id: string) => {
+      const category = getCategoryById(id)
 
-    return category
-  }
+      if (!category) {
+        return 'Brak kategorii'
+      }
 
-  const updateCategory = (id: string, payload: UpdateCategoryPayload) => {
-    const category = getCategoryById(id)
-
-    if (!category) {
-      return
+      return category.name
     }
 
-    category.name = payload.name
-    category.description = payload.description
+    const addCategory = (payload: CreateCategoryPayload) => {
+      const category: Category = {
+        id: crypto.randomUUID(),
+        name: payload.name,
+        description: payload.description
+      }
 
-    return category
-  }
+      categories.value.push(category)
 
-  const deleteCategory = (id: string) => {
-    categories.value = categories.value.filter((category) => category.id !== id)
-  }
+      const notificationsStore = useNotificationsStore()
 
-  return {
-    categories,
-    loadCategories,
-    getCategoryById,
-    getCategoryName,
-    addCategory,
-    updateCategory,
-    deleteCategory
+      notificationsStore.addNotification({
+        type: 'success',
+        title: 'Dodano kategorię',
+        message: `Dodano kategorię "${category.name}".`
+      })
+
+      return category
+    }
+
+    const updateCategory = (id: string, payload: UpdateCategoryPayload) => {
+      const category = getCategoryById(id)
+
+      if (!category) {
+        return
+      }
+
+      category.name = payload.name
+      category.description = payload.description
+
+      const notificationsStore = useNotificationsStore()
+
+      notificationsStore.addNotification({
+        type: 'info',
+        title: 'Zaktualizowano kategorię',
+        message: `Zaktualizowano kategorię "${category.name}".`
+      })
+
+      return category
+    }
+
+    const deleteCategory = (id: string) => {
+      const category = getCategoryById(id)
+
+      if (!category) {
+        return
+      }
+
+      const notificationsStore = useNotificationsStore()
+
+      notificationsStore.addNotification({
+        type: 'warning',
+        title: 'Usunięto kategorię',
+        message: `Usunięto kategorię "${category.name}".`
+      })
+
+      categories.value = categories.value.filter((item) => item.id !== id)
+    }
+
+    return {
+      categories,
+      loadCategories,
+      getCategoryById,
+      getCategoryName,
+      addCategory,
+      updateCategory,
+      deleteCategory
+    }
+  },
+  {
+    persist: true
   }
-})
+)

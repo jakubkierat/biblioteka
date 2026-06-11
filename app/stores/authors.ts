@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { mockAuthors } from '../data/mockLibrary'
 import type { Author } from '../types/author'
+import { useNotificationsStore } from './notifications'
 
 export interface CreateAuthorPayload {
   firstName: string
@@ -14,67 +15,103 @@ export interface UpdateAuthorPayload {
   biography?: string
 }
 
-export const useAuthorsStore = defineStore('authors', () => {
-  const authors = ref<Author[]>([...mockAuthors])
+export const useAuthorsStore = defineStore(
+  'authors',
+  () => {
+    const authors = ref<Author[]>([...mockAuthors])
 
-const loadAuthors = async () => {
-  const data = await $fetch<Author[]>('/api/authors')
+    const loadAuthors = async () => {
+      const data = await $fetch<Author[]>('/api/authors')
 
-  authors.value = data
-}
-
-  const getAuthorById = (id: string) => {
-    return authors.value.find((author) => author.id === id)
-  }
-
-  const getAuthorFullName = (id: string) => {
-    const author = getAuthorById(id)
-
-    if (!author) {
-      return 'Nieznany autor'
+      authors.value = data
     }
 
-    return `${author.firstName} ${author.lastName}`
-  }
-
-  const addAuthor = (payload: CreateAuthorPayload) => {
-    const author: Author = {
-      id: crypto.randomUUID(),
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-      biography: payload.biography
+    const getAuthorById = (id: string) => {
+      return authors.value.find((author) => author.id === id)
     }
 
-    authors.value.push(author)
+    const getAuthorFullName = (id: string) => {
+      const author = getAuthorById(id)
 
-    return author
-  }
+      if (!author) {
+        return 'Nieznany autor'
+      }
 
-  const updateAuthor = (id: string, payload: UpdateAuthorPayload) => {
-    const author = getAuthorById(id)
-
-    if (!author) {
-      return
+      return `${author.firstName} ${author.lastName}`
     }
 
-    author.firstName = payload.firstName
-    author.lastName = payload.lastName
-    author.biography = payload.biography
+    const addAuthor = (payload: CreateAuthorPayload) => {
+      const author: Author = {
+        id: crypto.randomUUID(),
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        biography: payload.biography
+      }
 
-    return author
-  }
+      authors.value.push(author)
 
-  const deleteAuthor = (id: string) => {
-    authors.value = authors.value.filter((author) => author.id !== id)
-  }
+      const notificationsStore = useNotificationsStore()
 
-  return {
-    authors,
-    loadAuthors,
-    getAuthorById,
-    getAuthorFullName,
-    addAuthor,
-    updateAuthor,
-    deleteAuthor
+      notificationsStore.addNotification({
+        type: 'success',
+        title: 'Dodano autora',
+        message: `Dodano autora ${author.firstName} ${author.lastName}.`
+      })
+
+      return author
+    }
+
+    const updateAuthor = (id: string, payload: UpdateAuthorPayload) => {
+      const author = getAuthorById(id)
+
+      if (!author) {
+        return
+      }
+
+      author.firstName = payload.firstName
+      author.lastName = payload.lastName
+      author.biography = payload.biography
+
+      const notificationsStore = useNotificationsStore()
+
+      notificationsStore.addNotification({
+        type: 'info',
+        title: 'Zaktualizowano autora',
+        message: `Zaktualizowano autora ${author.firstName} ${author.lastName}.`
+      })
+
+      return author
+    }
+
+    const deleteAuthor = (id: string) => {
+      const author = getAuthorById(id)
+
+      if (!author) {
+        return
+      }
+
+      const notificationsStore = useNotificationsStore()
+
+      notificationsStore.addNotification({
+        type: 'warning',
+        title: 'Usunięto autora',
+        message: `Usunięto autora ${author.firstName} ${author.lastName}.`
+      })
+
+      authors.value = authors.value.filter((item) => item.id !== id)
+    }
+
+    return {
+      authors,
+      loadAuthors,
+      getAuthorById,
+      getAuthorFullName,
+      addAuthor,
+      updateAuthor,
+      deleteAuthor
+    }
+  },
+  {
+    persist: true
   }
-})
+)
