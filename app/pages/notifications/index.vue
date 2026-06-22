@@ -2,6 +2,10 @@
 import { useNotificationsStore } from '../../stores/notifications'
 
 const notificationsStore = useNotificationsStore()
+
+onMounted(() => {
+  notificationsStore.markAllAsRead()
+})
 </script>
 
 <template>
@@ -19,6 +23,7 @@ const notificationsStore = useNotificationsStore()
 
       <UButton
         color="error"
+        :disabled="notificationsStore.notifications.length === 0"
         @click="notificationsStore.clearNotifications"
       >
         Wyczyść wszystkie
@@ -30,24 +35,33 @@ const notificationsStore = useNotificationsStore()
       :key="notification.id"
     >
       <div class="space-y-2">
-        <h3 class="font-semibold">
-          {{ notification.title }}
-        </h3>
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="font-semibold text-gray-900 dark:text-white">
+            {{ notification.title }}
+          </h3>
 
-        <p>
+          <UBadge
+            :color="notification.read ? 'neutral' : 'primary'"
+            variant="subtle"
+          >
+            {{ notification.read ? 'Przeczytane' : 'Nowe' }}
+          </UBadge>
+        </div>
+
+        <p class="text-gray-700 dark:text-gray-300">
           {{ notification.message }}
         </p>
 
-        <p class="text-xs text-gray-500">
+        <p class="text-xs text-gray-500 dark:text-gray-400">
           {{ new Date(notification.createdAt).toLocaleString('pl-PL') }}
         </p>
       </div>
     </UCard>
 
-    <UCard
-      v-if="notificationsStore.notifications.length === 0"
-    >
-      Brak powiadomień.
+    <UCard v-if="notificationsStore.notifications.length === 0">
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Brak powiadomień.
+      </p>
     </UCard>
   </div>
 </template>

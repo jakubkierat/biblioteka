@@ -17,9 +17,7 @@ export const useNotificationsStore = defineStore('notifications', {
 
   getters: {
     unreadCount: (state) => {
-      return state.notifications.filter(
-        (notification) => !notification.read
-      ).length
+      return state.notifications.filter((notification) => !notification.read).length
     }
   },
 
@@ -36,13 +34,20 @@ export const useNotificationsStore = defineStore('notifications', {
     },
 
     markAsRead(id: string) {
-      const notification = this.notifications.find(
-        (item) => item.id === id
-      )
+      const notification = this.notifications.find((item) => item.id === id)
 
-      if (notification) {
-        notification.read = true
+      if (!notification) {
+        return
       }
+
+      notification.read = true
+    },
+
+    markAllAsRead() {
+      this.notifications = this.notifications.map((notification) => ({
+        ...notification,
+        read: true
+      }))
     },
 
     clearNotifications() {
