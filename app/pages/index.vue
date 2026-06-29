@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { useAuthStore } from '../stores/auth'
 import { useAuthorsStore } from '../stores/authors'
 import { useBooksStore } from '../stores/books'
 import { useCategoriesStore } from '../stores/categories'
 import { useLoansStore } from '../stores/loans'
 
+const authStore = useAuthStore()
 const booksStore = useBooksStore()
 const authorsStore = useAuthorsStore()
 const categoriesStore = useCategoriesStore()
@@ -33,6 +35,7 @@ const loansStore = useLoansStore()
         </UButton>
 
         <UButton
+          v-if="authStore.isAdmin"
           icon="i-heroicons-user-group"
           color="neutral"
           variant="outline"
@@ -42,6 +45,7 @@ const loansStore = useLoansStore()
         </UButton>
 
         <UButton
+          v-if="authStore.isAdmin"
           icon="i-heroicons-tag"
           color="neutral"
           variant="outline"
@@ -51,6 +55,7 @@ const loansStore = useLoansStore()
         </UButton>
 
         <UButton
+          v-if="authStore.isLoggedIn"
           icon="i-heroicons-arrow-path"
           color="neutral"
           variant="outline"
@@ -60,6 +65,7 @@ const loansStore = useLoansStore()
         </UButton>
 
         <UButton
+          v-if="authStore.isAdmin"
           icon="i-heroicons-plus"
           color="neutral"
           variant="outline"
@@ -195,7 +201,10 @@ const loansStore = useLoansStore()
               Statystyki katalogu
             </h3>
 
-            <div class="flex gap-2">
+            <div
+              v-if="authStore.isAdmin"
+              class="flex gap-2"
+            >
               <UButton
                 size="sm"
                 color="neutral"
