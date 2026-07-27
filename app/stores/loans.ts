@@ -9,12 +9,6 @@ export const useLoansStore = defineStore(
   () => {
     const loans = ref<Loan[]>([...mockLoans])
 
-    const loadLoans = async () => {
-      const data = await $fetch<Loan[]>('/api/loans')
-
-      loans.value = data
-    }
-
     const activeLoans = computed(() => {
       return loans.value.filter((loan) => loan.status === 'active')
     })
@@ -78,7 +72,6 @@ export const useLoansStore = defineStore(
       loans,
       activeLoans,
       returnedLoans,
-      loadLoans,
       getActiveLoanByBookId,
       addLoan,
       returnLoan

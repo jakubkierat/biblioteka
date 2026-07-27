@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { mockCategories } from '../data/mockLibrary'
 import type { Category } from '../types/category'
+import { useBooksStore } from './books'
 import { useNotificationsStore } from './notifications'
 
 export interface CreateCategoryPayload {
@@ -8,21 +9,12 @@ export interface CreateCategoryPayload {
   description?: string
 }
 
-export interface UpdateCategoryPayload {
-  name: string
-  description?: string
-}
+export type UpdateCategoryPayload = CreateCategoryPayload
 
 export const useCategoriesStore = defineStore(
   'categories',
   () => {
     const categories = ref<Category[]>([...mockCategories])
-
-    const loadCategories = async () => {
-      const data = await $fetch<Category[]>('/api/categories')
-
-      categories.value = data
-    }
 
     const getCategoryById = (id: string) => {
       return categories.value.find((category) => category.id === id)
@@ -83,10 +75,23 @@ export const useCategoriesStore = defineStore(
       const category = getCategoryById(id)
 
       if (!category) {
-        return
+        return false
       }
 
       const notificationsStore = useNotificationsStore()
+      const booksStore = useBooksStore()
+
+      const hasBooks = booksStore.books.some((book) => book.categoryId === id)
+
+      if (hasBooks) {
+        notificationsStore.addNotification({
+          type: 'error',
+          title: 'Nie można usunąć kategorii',
+          message: `Kategoria "${category.name}" ma przypisane książki w katalogu.`
+        })
+
+        return false
+      }
 
       notificationsStore.addNotification({
         type: 'warning',
@@ -95,11 +100,12 @@ export const useCategoriesStore = defineStore(
       })
 
       categories.value = categories.value.filter((item) => item.id !== id)
+
+      return true
     }
 
     return {
       categories,
-      loadCategories,
       getCategoryById,
       getCategoryName,
       addCategory,

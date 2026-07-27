@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BookStatusBadge from '../components/books/BookStatusBadge.vue'
 import { useAuthStore } from '../stores/auth'
 import { useAuthorsStore } from '../stores/authors'
 import { useBooksStore } from '../stores/books'

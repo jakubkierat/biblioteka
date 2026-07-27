@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { mockAuthors } from '../data/mockLibrary'
 import type { Author } from '../types/author'
+import { useBooksStore } from './books'
 import { useNotificationsStore } from './notifications'
 
 export interface CreateAuthorPayload {
@@ -9,22 +10,12 @@ export interface CreateAuthorPayload {
   biography?: string
 }
 
-export interface UpdateAuthorPayload {
-  firstName: string
-  lastName: string
-  biography?: string
-}
+export type UpdateAuthorPayload = CreateAuthorPayload
 
 export const useAuthorsStore = defineStore(
   'authors',
   () => {
     const authors = ref<Author[]>([...mockAuthors])
-
-    const loadAuthors = async () => {
-      const data = await $fetch<Author[]>('/api/authors')
-
-      authors.value = data
-    }
 
     const getAuthorById = (id: string) => {
       return authors.value.find((author) => author.id === id)
@@ -87,10 +78,23 @@ export const useAuthorsStore = defineStore(
       const author = getAuthorById(id)
 
       if (!author) {
-        return
+        return false
       }
 
       const notificationsStore = useNotificationsStore()
+      const booksStore = useBooksStore()
+
+      const hasBooks = booksStore.books.some((book) => book.authorId === id)
+
+      if (hasBooks) {
+        notificationsStore.addNotification({
+          type: 'error',
+          title: 'Nie można usunąć autora',
+          message: `Autor ${author.firstName} ${author.lastName} ma przypisane książki w katalogu.`
+        })
+
+        return false
+      }
 
       notificationsStore.addNotification({
         type: 'warning',
@@ -99,11 +103,12 @@ export const useAuthorsStore = defineStore(
       })
 
       authors.value = authors.value.filter((item) => item.id !== id)
+
+      return true
     }
 
     return {
       authors,
-      loadAuthors,
       getAuthorById,
       getAuthorFullName,
       addAuthor,

@@ -50,11 +50,25 @@ describe('useCategoriesStore', () => {
     expect(category?.description).toBe('Klasyka literatury.')
   })
 
-  it('usuwa kategorię', () => {
+  it('usuwa kategorię bez przypisanych książek', () => {
     const categoriesStore = useCategoriesStore()
 
-    categoriesStore.deleteCategory('category-1')
+    const category = categoriesStore.addCategory({
+      name: 'Testowa kategoria'
+    })
 
-    expect(categoriesStore.getCategoryById('category-1')).toBeUndefined()
+    const removed = categoriesStore.deleteCategory(category.id)
+
+    expect(removed).toBe(true)
+    expect(categoriesStore.getCategoryById(category.id)).toBeUndefined()
+  })
+
+  it('nie usuwa kategorii przypisanej do książek', () => {
+    const categoriesStore = useCategoriesStore()
+
+    const removed = categoriesStore.deleteCategory('category-1')
+
+    expect(removed).toBe(false)
+    expect(categoriesStore.getCategoryById('category-1')).toBeDefined()
   })
 })

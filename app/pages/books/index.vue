@@ -10,6 +10,27 @@ const booksStore = useBooksStore()
 const authorsStore = useAuthorsStore()
 const categoriesStore = useCategoriesStore()
 
+const statusFilterItems = [
+  { label: 'Wszystkie statusy', value: 'all' },
+  { label: 'Dostępne', value: 'available' },
+  { label: 'Wypożyczone', value: 'borrowed' }
+]
+
+const categoryFilterItems = computed(() => [
+  { label: 'Wszystkie kategorie', value: 'all' },
+  ...categoriesStore.categories.map((category) => ({
+    label: category.name,
+    value: category.id
+  }))
+])
+
+const sortFilterItems = [
+  { label: 'Tytuł A-Z', value: 'title-asc' },
+  { label: 'Tytuł Z-A', value: 'title-desc' },
+  { label: 'Rok rosnąco', value: 'year-asc' },
+  { label: 'Rok malejąco', value: 'year-desc' }
+]
+
 const deleteSelectedBook = (id: string) => {
   const confirmed = window.confirm('Czy na pewno usunąć tę książkę?')
 
@@ -62,60 +83,23 @@ const deleteSelectedBook = (id: string) => {
           placeholder="Szukaj po tytule lub ISBN"
         />
 
-        <select
+        <USelect
           v-model="booksStore.filters.status"
-          class="h-10 rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-        >
-          <option value="all">
-            Wszystkie statusy
-          </option>
+          :items="statusFilterItems"
+          class="w-full"
+        />
 
-          <option value="available">
-            Dostępne
-          </option>
-
-          <option value="borrowed">
-            Wypożyczone
-          </option>
-        </select>
-
-        <select
+        <USelect
           v-model="booksStore.filters.categoryId"
-          class="h-10 rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-        >
-          <option value="all">
-            Wszystkie kategorie
-          </option>
+          :items="categoryFilterItems"
+          class="w-full"
+        />
 
-          <option
-            v-for="category in categoriesStore.categories"
-            :key="category.id"
-            :value="category.id"
-          >
-            {{ category.name }}
-          </option>
-        </select>
-
-        <select
+        <USelect
           v-model="booksStore.filters.sort"
-          class="h-10 rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-        >
-          <option value="title-asc">
-            Tytuł A-Z
-          </option>
-
-          <option value="title-desc">
-            Tytuł Z-A
-          </option>
-
-          <option value="year-asc">
-            Rok rosnąco
-          </option>
-
-          <option value="year-desc">
-            Rok malejąco
-          </option>
-        </select>
+          :items="sortFilterItems"
+          class="w-full"
+        />
       </div>
     </UCard>
 

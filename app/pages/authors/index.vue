@@ -77,13 +77,6 @@ const saveAuthor = (data: AuthorSchema) => {
 }
 
 const deleteAuthor = (author: Author) => {
-  const booksCount = getAuthorBooksCount(author.id)
-
-  if (booksCount > 0) {
-    window.alert('Nie można usunąć autora przypisanego do książek.')
-    return
-  }
-
   const confirmed = window.confirm('Czy na pewno usunąć tego autora?')
 
   if (!confirmed) {

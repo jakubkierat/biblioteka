@@ -1,8 +1,19 @@
 import { z } from 'zod'
 
+const isbnPattern = /^[0-9][0-9-]*[0-9Xx]$/
+
 export const bookSchema = z.object({
   title: z.string().min(1, 'Tytuł jest wymagany').max(120, 'Tytuł może mieć maksymalnie 120 znaków'),
-  isbn: z.string().min(10, 'ISBN musi mieć co najmniej 10 znaków').max(17, 'ISBN może mieć maksymalnie 17 znaków'),
+  isbn: z
+    .string()
+    .min(10, 'ISBN musi mieć co najmniej 10 znaków')
+    .max(17, 'ISBN może mieć maksymalnie 17 znaków')
+    .regex(isbnPattern, 'ISBN może zawierać tylko cyfry, myślniki i literę X na końcu')
+    .refine((value) => {
+      const digitCount = value.replace(/-/g, '').length
+
+      return digitCount === 10 || digitCount === 13
+    }, 'ISBN musi mieć 10 cyfr (ISBN-10) albo 13 cyfr (ISBN-13) po usunięciu myślników'),
   authorId: z.string().min(1, 'Autor jest wymagany'),
   categoryId: z.string().min(1, 'Kategoria jest wymagana'),
   publishedYear: z.coerce

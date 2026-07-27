@@ -52,11 +52,26 @@ describe('useAuthorsStore', () => {
     expect(author?.biography).toBe('Zmieniona biografia.')
   })
 
-  it('usuwa autora', () => {
+  it('usuwa autora bez przypisanych książek', () => {
     const authorsStore = useAuthorsStore()
 
-    authorsStore.deleteAuthor('author-1')
+    const author = authorsStore.addAuthor({
+      firstName: 'Test',
+      lastName: 'Autor'
+    })
 
-    expect(authorsStore.getAuthorById('author-1')).toBeUndefined()
+    const removed = authorsStore.deleteAuthor(author.id)
+
+    expect(removed).toBe(true)
+    expect(authorsStore.getAuthorById(author.id)).toBeUndefined()
+  })
+
+  it('nie usuwa autora przypisanego do książek', () => {
+    const authorsStore = useAuthorsStore()
+
+    const removed = authorsStore.deleteAuthor('author-1')
+
+    expect(removed).toBe(false)
+    expect(authorsStore.getAuthorById('author-1')).toBeDefined()
   })
 })

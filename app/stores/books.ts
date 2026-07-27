@@ -22,15 +22,7 @@ export interface CreateBookPayload {
   status: BookStatus
 }
 
-export interface UpdateBookPayload {
-  title: string
-  isbn: string
-  authorId: string
-  categoryId: string
-  publishedYear: number
-  description: string
-  status: BookStatus
-}
+export type UpdateBookPayload = CreateBookPayload
 
 export const useBooksStore = defineStore(
   'books',
@@ -91,12 +83,6 @@ export const useBooksStore = defineStore(
 
       return result
     })
-
-    const loadBooks = async () => {
-      const data = await $fetch<Book[]>('/api/books')
-
-      books.value = data
-    }
 
     const getBookById = (id: string) => {
       return books.value.find((book) => book.id === id)
@@ -194,7 +180,6 @@ export const useBooksStore = defineStore(
       availableBooks,
       borrowedBooks,
       filteredBooks,
-      loadBooks,
       getBookById,
       addBook,
       updateBook,

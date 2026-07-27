@@ -74,13 +74,6 @@ const saveCategory = (data: CategorySchema) => {
 }
 
 const deleteCategory = (category: Category) => {
-  const booksCount = getCategoryBooksCount(category.id)
-
-  if (booksCount > 0) {
-    window.alert('Nie można usunąć kategorii przypisanej do książek.')
-    return
-  }
-
   const confirmed = window.confirm('Czy na pewno usunąć tę kategorię?')
 
   if (!confirmed) {
